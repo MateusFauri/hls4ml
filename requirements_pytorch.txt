@@ -1,0 +1,34 @@
+# Core
+hls4ml
+
+# ONNX pipeline
+onnx
+qonnx
+onnxoptimizer
+onnxruntime
+
+# Base científica
+numpy<2.0
+pandas
+scipy
+scikit-learn
+matplotlib
+datasets
+
+# Utilidades
+kaggle
+pyyaml
+tqdm
+pydot
+graphviz
+seaborn
+setuptools
+pyarrow
+fastparquet
+mlcroissant
+
+# PyTorch + quantização
+torch==2.2.2
+torchvision==0.17.2
+torchaudio==2.2.2
+brevitas==0.10.2
