@@ -15,8 +15,7 @@ hls4mlprj_*
 *~
 *.ipynb_checkpoints/
 *.bak
-.venv_hls4ml/
-.venv_hls4ml_p/
+.venv_*/
 outputs/
 .python-version
 project/data/

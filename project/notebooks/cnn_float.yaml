@@ -1,0 +1,59 @@
+ModelName: cnn_float
+Backend: Vitis
+OutputDir: outputs/cnn_float
+ProjectName: cnn_float
+
+Part: xc7z020clg400-1
+ClockPeriod: 10
+IOType: io_stream
+
+HLSConfig:
+
+  Model:
+    Strategy: Latency
+    ReuseFactor: 1
+
+    Precision:
+      default: ap_fixed<16,6>
+
+      weight: ap_fixed<16,6>
+      bias: ap_fixed<16,6>
+      result: ap_fixed<16,6>
+      accum: ap_fixed<24,10>
+
+  LayerType:
+
+    Conv2D:
+      Strategy: Latency
+      ReuseFactor: 1
+      Precision:
+        weight: ap_fixed<16,6>
+        bias: ap_fixed<16,6>
+        result: ap_fixed<16,6>
+        accum: ap_fixed<24,10>
+
+    Dense:
+      Strategy: Latency
+      ReuseFactor: 1
+      Precision:
+        weight: ap_fixed<16,6>
+        bias: ap_fixed<16,6>
+        result: ap_fixed<16,6>
+        accum: ap_fixed<24,10>
+
+  LayerName:
+
+    conv2d_2:
+      Trace: True
+
+    conv2d_3:
+      Trace: True
+
+    flatten_1:
+      Trace: True
+
+    dense_2:
+      Trace: True
+
+    dense_3:
+      Trace: True
