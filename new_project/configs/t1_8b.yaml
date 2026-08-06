@@ -1,0 +1,99 @@
+ModelName: t1_best_8b
+Backend: Vitis
+OutputDir: outputs/t1/8bits
+ProjectName: t1_best_8b
+
+
+KerasH5: models/results/t1/8bits/best/model.h5
+InputData: data/hls/t1/8bits/input_features.dat
+OutputPredictions: data/hls/t1/8bits/output_predictions.dat
+
+
+Part: xc7z020clg400-1
+ClockPeriod: 10
+IOType: io_stream
+
+
+HLSConfig:
+  
+  Model:
+    
+    Strategy: Latency
+    ReuseFactor: 1
+    Precision:
+      
+      default: ap_uint<8>
+      weight: ap_uint<8>
+      bias: ap_uint<8>
+      result: ap_uint<8>
+      accum: ap_uint<16>
+
+  LayerType:
+    
+    Conv2D:
+      
+      Strategy: Latency
+      ReuseFactor: 1
+      Precision:
+        
+        weight: ap_uint<8>
+        bias: ap_uint<8>
+        result: ap_uint<8>
+        accum: ap_uint<16>
+    
+    Dense:
+      
+      Strategy: Latency
+      ReuseFactor: 1
+      Precision:
+        
+        weight: ap_uint<8>
+        bias: ap_uint<8>
+        result: ap_uint<8>
+        accum: ap_uint<16>
+  
+  LayerName:
+    
+    q_conv2d:
+      
+      Trace: true
+    
+    batch_normalization:
+      
+      Trace: true
+    
+    q_activation:
+      
+      Trace: true
+    
+    q_conv2d_1:
+      
+      Trace: true
+    
+    batch_normalization_1:
+      
+      Trace: true
+    
+    q_activation_1:
+      
+      Trace: true
+    
+    flatten:
+      
+      Trace: true
+    
+    q_dense:
+      
+      Trace: true
+    
+    batch_normalization_2:
+      
+      Trace: true
+    
+    q_activation_2:
+      
+      Trace: true
+    
+    q_dense_1:
+      
+      Trace: true

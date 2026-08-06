@@ -1,0 +1,60 @@
+ModelName: t1_best_4b
+Backend: Vitis
+OutputDir: outputs/t1/4bits
+ProjectName: t1_best_4b
+KerasH5: models/results/t1/4bits/best/model.h5
+InputData: data/hls/t1/4bits/input_features.dat
+OutputPredictions: data/hls/t1/4bits/output_predictions.dat
+Part: xc7z020clg400-1
+ClockPeriod: 10
+IOType: io_stream
+HLSConfig:
+  Model:
+    Strategy: Latency
+    ReuseFactor: 1
+    Precision:
+      default: ap_uint<4>
+      weight: ap_uint<4>
+      bias: ap_uint<4>
+      result: ap_uint<4>
+      accum: ap_uint<8>
+  LayerType:
+    Conv2D:
+      Strategy: Latency
+      ReuseFactor: 1
+      Precision:
+        weight: ap_uint<4>
+        bias: ap_uint<4>
+        result: ap_uint<4>
+        accum: ap_uint<8>
+    Dense:
+      Strategy: Latency
+      ReuseFactor: 1
+      Precision:
+        weight: ap_uint<4>
+        bias: ap_uint<4>
+        result: ap_uint<4>
+        accum: ap_uint<8>
+  LayerName:
+    q_conv2d_4:
+      Trace: true
+    batch_normalization_6:
+      Trace: true
+    q_activation_6:
+      Trace: true
+    q_conv2d_5:
+      Trace: true
+    batch_normalization_7:
+      Trace: true
+    q_activation_7:
+      Trace: true
+    flatten_2:
+      Trace: true
+    q_dense_4:
+      Trace: true
+    batch_normalization_8:
+      Trace: true
+    q_activation_8:
+      Trace: true
+    q_dense_5:
+      Trace: true

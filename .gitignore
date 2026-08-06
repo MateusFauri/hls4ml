@@ -19,3 +19,8 @@ hls4mlprj_*
 outputs/
 .python-version
 project/data/
+project/notebooks/results/
+project/notebooks/results_sem_batchnorm/
+project/notebooks/cnn_quant*
+new_project/data/
+new_project/outputs/

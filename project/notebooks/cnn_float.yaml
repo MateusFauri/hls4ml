@@ -3,6 +3,12 @@ Backend: Vitis
 OutputDir: outputs/cnn_float
 ProjectName: cnn_float
 
+#KerasJson: cnn_float.json
+#KerasH5: cnn_float.h5 
+InputData: input_features.dat
+OutputPredictions: output_predictions.dat
+
+
 Part: xc7z020clg400-1
 ClockPeriod: 10
 IOType: io_stream
