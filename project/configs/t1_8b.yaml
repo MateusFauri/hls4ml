@@ -1,0 +1,103 @@
+ModelName: t1_best_8b
+Backend: Vitis
+OutputDir: outputs/t1/8bits
+ProjectName: t1_best_8b
+
+KerasH5: models/results/t1/8bits/best/model.h5
+InputData: data/hls/t1/8bits/input_features.dat
+OutputPredictions: data/hls/t1/8bits/output_predictions.dat
+
+Part: xc7z020clg400-1
+ClockPeriod: 10
+IOType: io_stream
+
+HLSConfig:
+  Model:
+    Precision:
+      default: ap_fixed<8,1>
+    ReuseFactor: 1
+    Strategy: Latency
+    BramFactor: 4096
+    TraceOutput: false
+  LayerName:
+    input_1:
+      Trace: true
+      Precision:
+        result: ap_fixed<8,1>   # única exceção: dado normalizado em [0,1)
+    q_conv2d:
+      Trace: true
+      Precision:
+        result: ap_fixed<22,15> # precisa reter os 7 bits fracionários do input
+        weight: int<8>
+        bias: int<8>
+    q_conv2d_linear:
+      Trace: true
+      Precision:
+        result: int<16>
+    batch_normalization:
+      Trace: true
+      Precision:
+        result: auto
+        scale: auto
+        bias: auto
+    q_activation:
+      Trace: true
+      Precision:
+        result: int<8>
+    q_conv2d_1:
+      Trace: true
+      Precision:
+        result: int<19>
+        weight: int<8>
+        bias: int<8>
+    q_conv2d_1_linear:
+      Trace: true
+      Precision:
+        result: int<19>
+    batch_normalization_1:
+      Trace: true
+      Precision:
+        result: auto
+        scale: auto
+        bias: auto
+    q_activation_1:
+      Trace: true
+      Precision:
+        result: int<8>
+    flatten:
+      Trace: true
+      Precision:
+        result: int<8>
+    q_dense:
+      Trace: true
+      ReuseFactor: 128
+      Precision:
+        result: int<24>
+        weight: int<8>
+        bias: int<8>
+    q_dense_linear:
+      Trace: true
+      Precision:
+        result: int<24>
+    batch_normalization_2:
+      Trace: true
+      Precision:
+        result: auto
+        scale: auto
+        bias: auto
+    q_activation_2:
+      Trace: true
+      Precision:
+        result: int<8>
+    q_dense_1:
+      Trace: true
+      Precision:
+        result: int<16>
+        weight: int<8>
+        bias: int<8>
+    q_dense_1_softmax:
+      Trace: true
+      Precision:
+        result: auto
+        scale: auto
+        bias: auto

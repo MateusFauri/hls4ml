@@ -1,0 +1,97 @@
+ModelName: t1_best_1b
+Backend: Vitis
+OutputDir: outputs/t1/1bits
+ProjectName: t1_best_1b
+KerasH5: models/results/t1/1bits/best/model.h5
+InputData: data/hls/t1/1bits/input_features.dat
+OutputPredictions: data/hls/t1/1bits/output_predictions.dat
+Part: xc7z020clg400-1
+ClockPeriod: 10
+IOType: io_stream
+HLSConfig:
+  Model:
+    Precision:
+      default: ap_fixed<8,1>
+    ReuseFactor: 1
+    Strategy: Latency
+    BramFactor: 1000000000
+    TraceOutput: false
+  LayerName:
+    input_4:
+      Trace: true
+      Precision:
+        result: auto
+    q_conv2d_6:
+      Trace: true
+      Precision:
+        result: auto
+        weight: uint<1>
+        bias: int<2>
+    q_conv2d_6_linear:
+      Trace: true
+      Precision:
+        result: auto
+    batch_normalization_9:
+      Trace: true
+      Precision:
+        result: auto
+        scale: auto
+        bias: auto
+    q_activation_9:
+      Trace: true
+      Precision:
+        result: int<2>
+    q_conv2d_7:
+      Trace: true
+      Precision:
+        result: auto
+        weight: uint<1>
+        bias: int<2>
+    q_conv2d_7_linear:
+      Trace: true
+      Precision:
+        result: auto
+    batch_normalization_10:
+      Trace: true
+      Precision:
+        result: auto
+        scale: auto
+        bias: auto
+    q_activation_10:
+      Trace: true
+      Precision:
+        result: int<2>
+    flatten_3:
+      Trace: true
+      Precision:
+        result: auto
+    q_dense_6:
+      Trace: true
+      Precision:
+        result: auto
+        weight: uint<1>
+        bias: int<2>
+    q_dense_6_linear:
+      Trace: true
+      Precision:
+        result: auto
+    batch_normalization_11:
+      Trace: true
+      Precision:
+        result: auto
+        scale: auto
+        bias: auto
+    q_activation_11:
+      Trace: true
+      Precision:
+        result: int<2>
+    q_dense_7:
+      Trace: true
+      Precision:
+        result: auto
+        weight: uint<1>
+        bias: int<2>
+    q_dense_7_softmax:
+      Trace: true
+      Precision:
+        result: auto

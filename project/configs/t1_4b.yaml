@@ -1,0 +1,97 @@
+ModelName: t1_best_4b
+Backend: Vitis
+OutputDir: outputs/t1/4bits
+ProjectName: t1_best_4b
+KerasH5: models/results/t1/4bits/best/model.h5
+InputData: data/hls/t1/4bits/input_features.dat
+OutputPredictions: data/hls/t1/4bits/output_predictions.dat
+Part: xc7z020clg400-1
+ClockPeriod: 10
+IOType: io_stream
+HLSConfig:
+  Model:
+    Precision:
+      default: ap_fixed<8,1>
+    ReuseFactor: 1
+    Strategy: Latency
+    BramFactor: 1000000000
+    TraceOutput: false
+  LayerName:
+    input_2:
+      Trace: true
+      Precision:
+        result: auto
+    q_conv2d_2:
+      Trace: true
+      Precision:
+        result: auto
+        weight: fixed<4,4,TRN,WRAP,0>
+        bias: fixed<4,4,TRN,WRAP,0>
+    q_conv2d_2_linear:
+      Trace: true
+      Precision:
+        result: auto
+    batch_normalization_3:
+      Trace: true
+      Precision:
+        result: auto
+        scale: auto
+        bias: auto
+    q_activation_3:
+      Trace: true
+      Precision:
+        result: int<4>
+    q_conv2d_3:
+      Trace: true
+      Precision:
+        result: auto
+        weight: fixed<4,4,TRN,WRAP,0>
+        bias: fixed<4,4,TRN,WRAP,0>
+    q_conv2d_3_linear:
+      Trace: true
+      Precision:
+        result: auto
+    batch_normalization_4:
+      Trace: true
+      Precision:
+        result: auto
+        scale: auto
+        bias: auto
+    q_activation_4:
+      Trace: true
+      Precision:
+        result: int<4>
+    flatten_1:
+      Trace: true
+      Precision:
+        result: auto
+    q_dense_2:
+      Trace: true
+      Precision:
+        result: auto
+        weight: fixed<4,4,TRN,WRAP,0>
+        bias: fixed<4,4,TRN,WRAP,0>
+    q_dense_2_linear:
+      Trace: true
+      Precision:
+        result: auto
+    batch_normalization_5:
+      Trace: true
+      Precision:
+        result: auto
+        scale: auto
+        bias: auto
+    q_activation_5:
+      Trace: true
+      Precision:
+        result: int<4>
+    q_dense_3:
+      Trace: true
+      Precision:
+        result: auto
+        weight: fixed<4,4,TRN,WRAP,0>
+        bias: fixed<4,4,TRN,WRAP,0>
+    q_dense_3_softmax:
+      Trace: true
+      Precision:
+        result: auto

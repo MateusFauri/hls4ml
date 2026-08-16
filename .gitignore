@@ -18,9 +18,9 @@ hls4mlprj_*
 .venv_*/
 outputs/
 .python-version
+project_tests/data/
+project_tests/notebooks/results/
+project_tests/notebooks/results_sem_batchnorm/
+project_tests/notebooks/cnn_quant*
 project/data/
-project/notebooks/results/
-project/notebooks/results_sem_batchnorm/
-project/notebooks/cnn_quant*
-new_project/data/
-new_project/outputs/
+project/outputs/
