@@ -7,10 +7,6 @@ import tensorflow as tf
 from config import RANDOM_SEED, RESULTS_DIR
 
 
-# ======================================================
-# Reproducibility
-# ======================================================
-
 def set_seed(seed: int = RANDOM_SEED) -> None:
     """Set random seed for reproducible experiments."""
 
@@ -18,10 +14,6 @@ def set_seed(seed: int = RANDOM_SEED) -> None:
     np.random.seed(seed)
     tf.random.set_seed(seed)
 
-
-# ======================================================
-# Output directories
-# ======================================================
 
 def create_output_dir(
     model_name: str,

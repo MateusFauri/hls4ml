@@ -13,10 +13,6 @@ from sklearn.metrics import (
 )
 
 
-# ======================================================
-# Evaluation Result
-# ======================================================
-
 @dataclass
 class EvaluationResult:
     accuracy: float
@@ -25,10 +21,6 @@ class EvaluationResult:
     f1_score: float
     confusion_matrix: np.ndarray
 
-
-# ======================================================
-# Evaluation
-# ======================================================
 
 def evaluate_model(
     model: Sequential,

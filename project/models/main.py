@@ -71,19 +71,15 @@ def run_experiment(
 def main():
 
     set_seed()
-
-    dataset = load_sat6()
-
     for model_name in MODELS:
-
         print(f"\n{'='*70}")
         print(f"Running {model_name.upper()}")
         print(f"{'='*70}")
 
         for bits in BIT_LIST:
+            dataset = load_sat6(signed_bits=bits)
 
             for config_name, config in TRAIN_CONFIGS.items():
-
                 run_experiment(
                     dataset,
                     model_name,
@@ -91,7 +87,6 @@ def main():
                     config_name,
                     config,
                 )
-
 
 if __name__ == "__main__":
     main()

@@ -16,32 +16,5 @@ def build_quantizers(bits: int) -> Quantizers:
     return Quantizers(
         weights=quantizers.quantized_bits(bits, bits - 1, alpha=1),
         activation=quantizers.quantized_bits(bits, bits - 1, alpha=1),
+        #activation=quantizers.quantized_relu(bits),
     )
-
-def kernel_quantizer(bits: int):
-    """Quantizer for weights."""
-
-    return quantizers.quantized_bits(
-        bits=bits,
-        integer=bits - 1,
-        alpha=1,
-    )
-
-
-def bias_quantizer(bits: int):
-    """Quantizer for bias."""
-
-    return quantizers.quantized_bits(
-        bits=bits,
-        integer=bits - 1,
-        alpha=1,
-    )
-
-def activation_quantizer(bits: int):
-    """Quantizer for activations."""
-
-    return quantizers.quantized_relu(
-        bits=bits,
-        integer=bits - 1,
-    )
-

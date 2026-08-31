@@ -17,10 +17,6 @@ from config import (
 )
 
 
-# ======================================================
-# Training Result
-# ======================================================
-
 @dataclass
 class TrainingResult:
     history: object
@@ -28,35 +24,6 @@ class TrainingResult:
     accuracy: float
     output_dir: Path
 
-
-# ======================================================
-# Output directory
-# ======================================================
-
-def create_output_dir(
-    model_name: str,
-    bits: int,
-    config_name: str,
-) -> Path:
-
-    output_dir = (
-        RESULTS_DIR
-        / model_name
-        / f"{bits}bits"
-        / config_name
-    )
-
-    output_dir.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
-
-    return output_dir
-
-
-# ======================================================
-# Train
-# ======================================================
 
 def train_model(
     model: Sequential,

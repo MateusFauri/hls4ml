@@ -14,90 +14,93 @@ IOType: io_stream
 HLSConfig:
   Model:
     Precision:
-      default: ap_fixed<8,1>
+      default: int<8>
     ReuseFactor: 1
     Strategy: Latency
     BramFactor: 4096
-    TraceOutput: false
+    TraceOutput: true
+
   LayerName:
-    input_1:
-      Trace: true
-      Precision:
-        result: ap_fixed<8,1>   # única exceção: dado normalizado em [0,1)
-    q_conv2d:
-      Trace: true
-      Precision:
-        result: ap_fixed<22,15> # precisa reter os 7 bits fracionários do input
-        weight: int<8>
-        bias: int<8>
-    q_conv2d_linear:
-      Trace: true
-      Precision:
-        result: int<16>
-    batch_normalization:
-      Trace: true
-      Precision:
-        result: auto
-        scale: auto
-        bias: auto
-    q_activation:
+    network_input:
       Trace: true
       Precision:
         result: int<8>
-    q_conv2d_1:
+
+    conv2d_1:
       Trace: true
       Precision:
-        result: int<19>
         weight: int<8>
         bias: int<8>
-    q_conv2d_1_linear:
-      Trace: true
-      Precision:
-        result: int<19>
+        accum: int<22>
+        result: int<8>
+
     batch_normalization_1:
       Trace: true
       Precision:
         result: auto
         scale: auto
         bias: auto
-    q_activation_1:
+
+    activation_1:
       Trace: true
       Precision:
         result: int<8>
-    flatten:
+
+    conv2d_2:
       Trace: true
       Precision:
-        result: int<8>
-    q_dense:
-      Trace: true
-      ReuseFactor: 128
-      Precision:
-        result: int<24>
         weight: int<8>
         bias: int<8>
-    q_dense_linear:
-      Trace: true
-      Precision:
-        result: int<24>
+        accum: int<21>
+        result: int<8>
+
     batch_normalization_2:
       Trace: true
       Precision:
         result: auto
         scale: auto
         bias: auto
-    q_activation_2:
+
+    activation_2:
       Trace: true
       Precision:
         result: int<8>
-    q_dense_1:
+
+    flatten:
       Trace: true
       Precision:
-        result: int<16>
+        result: auto
+
+    dense_1:
+      Trace: true
+      Precision:
         weight: int<8>
         bias: int<8>
-    q_dense_1_softmax:
+        accum: int<30>
+        result: int<8>
+
+
+    batch_normalization_3:
       Trace: true
       Precision:
         result: auto
         scale: auto
         bias: auto
+
+    activation_3:
+      Trace: true
+      Precision:
+        result: int<8>
+
+    dense_output:
+      Trace: true
+      Precision:
+        weight: int<8>
+        bias: int<8>
+        accum: int<23>
+        result: int<16>
+
+    dense_output_softmax:
+      Trace: true
+      Precision:
+        result: auto

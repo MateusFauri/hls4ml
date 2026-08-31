@@ -18,14 +18,16 @@ DATASET_PATH = DATA_DIR / "sat-6-full.mat"
 
 INPUT_SHAPE = (28, 28, 4)
 NUM_CLASSES = 6
-VALIDATION_SPLIT = 0.15
+VALIDATION_SPLIT = 0.20
+TEST_SIZE = 0.20
 RANDOM_SEED = 42
 
 # ======================================================
 # Quantization
 # ======================================================
 
-BIT_LIST = [8, 4, 2, 1]
+BIT_LIST = [8]
+#BIT_LIST = [8, 4, 2, 1]
 
 # ======================================================
 # Models
@@ -102,7 +104,5 @@ RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 # Dataset constants
 # ======================================================
 
-TEST_SIZE = 0.20
-VALIDATION_SPLIT = 0.15
 NORMALIZATION_FACTOR = 255.0
 DATASET_TRANSPOSE = (3, 0, 1, 2)

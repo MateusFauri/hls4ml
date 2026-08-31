@@ -26,22 +26,40 @@ class Dataset:
     x_test: np.ndarray
     y_test: np.ndarray
 
+def normalize_images(images: np.ndarray) -> np.ndarray:
+    """Normalize images to the range [0, 1]."""
+    return images.astype(np.float32) / NORMALIZATION_FACTOR
 
-def load_sat6() -> Dataset:
+def to_signed_integers(images: np.ndarray, bits: int) -> np.ndarray:
+    """Convert unsigned image values to signed integers with the given bit width."""
+    if bits <= 0:
+        raise ValueError("bits must be greater than 0")
+
+    dtype = getattr(np, f"int{bits}")
+    return images.astype(dtype) 
+
+def load_sat6(
+    normalize_images: bool = False,
+    signed_bits: int | None = None,
+) -> Dataset:
     """Load and preprocess the SAT-6 dataset."""
 
     data = loadmat(DATASET_PATH)
 
-    images = data["train_x"]
-    labels = data["train_y"]
+    if signed_bits is not None:
+        images = to_signed_integers(data["train_x"], signed_bits)
+    else:   
+        images = data["train_x"]
 
+    labels = data["train_y"]
     images = images.transpose(DATASET_TRANSPOSE)
-    images = images.astype(np.float32) / NORMALIZATION_FACTOR
+
+    if normalize_images:
+        images = normalize_images(images)
 
     labels = labels.argmax(axis=0)
     labels = to_categorical(labels, NUM_CLASSES)
 
-    # 80% train/validation | 20% test
     x_train_val, x_test, y_train_val, y_test = train_test_split(
         images,
         labels,
@@ -50,7 +68,6 @@ def load_sat6() -> Dataset:
         stratify=labels.argmax(axis=1),
     )
 
-    # 85% train | 15% validation (dos 80%)
     x_train, x_validation, y_train, y_validation = train_test_split(
         x_train_val,
         y_train_val,

@@ -12,10 +12,6 @@ from config import (
 )
 
 
-# ======================================================
-# History
-# ======================================================
-
 def plot_history(
     history,
     output_dir: Path,
@@ -69,10 +65,6 @@ def plot_history(
     plt.close(fig)
 
 
-# ======================================================
-# Confusion Matrix
-# ======================================================
-
 def plot_confusion_matrix(
     evaluation,
     output_dir: Path,
@@ -99,10 +91,6 @@ def plot_confusion_matrix(
 
     plt.close(fig)
 
-
-# ======================================================
-# Summary
-# ======================================================
 
 def generate_plots(
     training,

@@ -7,6 +7,7 @@ from keras.layers import (
     Flatten,
     Input,
 )
+from keras.layers import Activation
 from qkeras import (
     QActivation,
     QConv2D,
@@ -17,26 +18,17 @@ from config import INPUT_SHAPE, NUM_CLASSES
 from quantizers_configurations import build_quantizers
 
 
-# ======================================================
-# Model definition
-# ======================================================
-
 @dataclass(frozen=True)
 class ModelDefinition:
     name: str
     builder: Callable[[int], Sequential]
 
 
-# ======================================================
-# Topology 1
-# ======================================================
 def build_t1(bits: int) -> Sequential:
-
     q = build_quantizers(bits)
 
     model = Sequential()
-
-    model.add(Input(shape=INPUT_SHAPE, name="input"))
+    model.add(Input(shape=INPUT_SHAPE, name="network_input"))
 
     model.add(
         QConv2D(
@@ -91,17 +83,11 @@ def build_t1(bits: int) -> Sequential:
     return model
 
 
-# ======================================================
-# Topology 2
-# ======================================================
-
 def build_t2(bits: int) -> Sequential:
-
     q = build_quantizers(bits)
 
     model = Sequential()
-
-    model.add(Input(shape=INPUT_SHAPE, name="input"))
+    model.add(Input(shape=INPUT_SHAPE, name="network_input"))
 
     model.add(
         QConv2D(
@@ -185,10 +171,6 @@ def build_t2(bits: int) -> Sequential:
     return model
 
 
-# ======================================================
-# Available models
-# ======================================================
-
 MODEL_BUILDERS = {
     "t1": ModelDefinition(
         name="t1",
@@ -200,10 +182,6 @@ MODEL_BUILDERS = {
     #),
 }
 
-
-# ======================================================
-# Factory
-# ======================================================
 
 def build_model(model_name: str, bits: int) -> Sequential:
 
