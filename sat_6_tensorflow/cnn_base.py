@@ -1,130 +1,139 @@
 import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers, models
-from qkeras import QConv2D, QDense, QActivation
-from qkeras.quantizers import quantized_bits, quantized_relu
+from keras.layers import Activation
+from keras.models import Model, Sequential
+from keras.layers import Input, MaxPooling2D,Conv2D,Dense, Activation, Flatten, Dense, BatchNormalization
+from qkeras import QConv2D, QActivation, QDense, quantized_bits, quantized_relu
+
 
 def build_t1(img_size=32, num_bands=4, num_classes=6):
-    inputs = layers.Input(shape=(img_size, img_size, num_bands), name="input_32x32x4")
- 
-    x = layers.Conv2D(
-        filters=32,
-        kernel_size=3,
-        strides=2,
-        padding="same",
-        use_bias=True,
-        name="conv1_3x3_s2",
-    )(inputs)
-    x = layers.Activation("relu", name="conv1_relu")(x)
- 
-    x = layers.Conv2D(
-        filters=8,
-        kernel_size=1,
-        strides=1,
-        padding="same",
-        use_bias=True,
-        name="conv2_1x1_s1",
-    )(x)
-    x = layers.Activation("relu", name="conv2_relu")(x)
- 
-    x = layers.Flatten(name="flatten")(x)
-    x = layers.Dense(num_classes, name="dense_output")(x)
-    outputs = layers.Activation("softmax", name="softmax_output")(x)
- 
-    model = models.Model(inputs=inputs, outputs=outputs, name="t1")
-    return model
- 
-
-
-def get_weight_quantizer(bit_width):
-    return quantized_bits(bits=bit_width - 1, integer=0, alpha=1, keep_negative=True)
- 
- 
-def get_act_quantizer(bit_width):
-    return quantized_relu(bits=bit_width - 1, integer=0)
- 
- 
-def _maybe_uniform_init(bit_quantization):
-    if bit_quantization == 2:
-        return keras.initializers.RandomUniform(minval=-1.0, maxval=1.0)
-    return "glorot_uniform"
- 
- 
-def build_t1_quantizedCNN(bit_quantization, input_shape=(32, 32, 4)):
-    w_quant = get_weight_quantizer(bit_quantization)
-    a_quant = get_act_quantizer(bit_quantization)
-    kernel_init = _maybe_uniform_init(bit_quantization)
- 
-    inputs = keras.Input(shape=input_shape, name="input_layer")
- 
-    x = QConv2D(
-        filters=20,
-        kernel_size=3,
-        strides=2,
-        padding="same",
-        use_bias=False,
-        kernel_quantizer=w_quant,
-        #kernel_initializer=kernel_init,
-        name="conv1",
-    )(inputs)
-    x = QActivation(a_quant, name="relu1")(x)
- 
-    x = QConv2D(
-        filters=8,
-        kernel_size=1,
-        strides=1,
-        padding="same",
-        use_bias=False,
-        kernel_quantizer=w_quant,
-        #kernel_initializer=kernel_init,
-        name="conv2",
-    )(x)
-    x = QActivation(a_quant, name="relu2")(x)
- 
-    x = layers.Flatten(name="flatten")(x)
- 
-    outputs = QDense(
-        units=6,
-        use_bias=False,
-        kernel_quantizer=w_quant,
-        #kernel_initializer=kernel_init,
-        name="fc1",
-    )(x)
- 
-    return keras.Model(inputs=inputs, outputs=outputs, name=f"t1_quantizedCNN_{bit_quantization}b")
- 
- 
-def build_t2_quantizedCNN(bit_quantization, input_shape=(32, 32, 4)):
-    w_quant = get_weight_quantizer(bit_quantization)
-    a_quant = get_act_quantizer(bit_quantization)
-    kernel_init = _maybe_uniform_init(bit_quantization)
- 
-    inputs = keras.Input(shape=input_shape, name="input_layer")
- 
-    channels = [16, 8, 16, 8]
-    x = inputs
-    for i, out_ch in enumerate(channels, start=1):
-        x = QConv2D(
-            filters=out_ch,
+    model = Sequential()
+    model.add( 
+        Conv2D(
+            input_shape=(img_size, img_size, num_bands),
+            filters=20,
             kernel_size=3,
             strides=2,
             padding="same",
             use_bias=False,
-            kernel_quantizer=w_quant,
-            kernel_initializer=kernel_init,
-            name=f"conv{i}",
+            name="conv1",
+        )
+    )
+    model.add(Activation("relu", name="relu1"))
+
+    model.add(
+        Conv2D(
+            filters=8,
+            kernel_size=1,
+            strides=1,
+            padding="same",
+            use_bias=False,
+            name="conv2",
+        )
+    )
+    model.add(Activation("relu", name="relu2"))
+    model.add(Flatten(name="flatten"))
+    model.add(Dense(num_classes, name="output_dense"))
+    model.add(Activation("softmax", name="softmax_output"))
+    return model
+ 
+def build_t1_quantized(img_size=32, num_bands=4, num_classes=6, bits=8):
+    model = Input(shape=(img_size, img_size, num_bands))
+    model.add(
+        QConv2D(
+            input_shape=(img_size, img_size, num_bands),
+            filters=20,
+            kernel_size=3,
+            strides=2,
+            padding="same",
+            name="conv1",
+            kernel_quantizer=quantized_bits(bits, 0, alpha=1),
+        )
+    )
+    model.add(QActivation(activation=quantized_relu(bits), name="relu1"))
+
+    model.add(
+        QConv2D(
+            filters=8,
+            kernel_size=1,
+            strides=1,
+            padding="same",
+            name="conv2",
+            kernel_quantizer=quantized_bits(bits, 0, alpha=1),
+        )
+    )
+    model.add(QActivation(activation=quantized_relu(bits), name="relu2"))
+
+    model.add(Flatten(name="flatten"))
+    model.add(
+        QDense(
+            num_classes,
+            name="output_dense",
+            kernel_quantizer=quantized_bits(bits, 0, alpha=1),
+        )
+    )
+    model.add(Activation("softmax", name="softmax"))
+
+    return model
+
+
+
+def build_qkeras_model(
+    input_shape,
+    n_classes,
+    filters_per_conv_layer,
+    neurons_per_dense_layer=None,
+    bits=8,
+    **kwargs,
+):
+    neurons_per_dense_layer = neurons_per_dense_layer or []
+
+    kernel_size = kwargs.get('kernel_size', (3, 3))
+    pool_size = kwargs.get('pool_size', (2, 2))
+    batch_norm = kwargs.get('batch_norm', False)
+    max_pool = kwargs.get('max_pool', False)
+    use_bias = kwargs.get('use_bias', False)
+
+    kernel_quantizer = f'quantized_bits({bits},0,alpha=1)'
+    bias_quantizer = kernel_quantizer if use_bias else None
+
+    x_in = Input(shape=input_shape)
+    x = x_in
+
+    for i, f in enumerate(filters_per_conv_layer):
+        x = QConv2D(
+            int(f),
+            kernel_size=kernel_size,
+            kernel_quantizer=kernel_quantizer,
+            bias_quantizer=bias_quantizer,
+            use_bias=use_bias,
+            name=f'conv_{i}',
         )(x)
-        x = QActivation(a_quant, name=f"relu{i}")(x)
- 
-    x = layers.Flatten(name="flatten")(x)
- 
-    outputs = QDense(
-        units=6,
-        use_bias=False,
-        kernel_quantizer=w_quant,
-        kernel_initializer=kernel_init,
-        name="fc1",
+        if batch_norm:
+            x = BatchNormalization(name=f'bn_conv_{i}')(x)
+        x = QActivation(f'quantized_relu({bits})', name=f'conv_act_{i}')(x)
+        if max_pool:
+            x = MaxPooling2D(pool_size=pool_size, name=f'pool_{i}')(x)
+
+    x = Flatten()(x)
+
+    for i, n in enumerate(neurons_per_dense_layer):
+        x = QDense(
+            n,
+            kernel_quantizer=kernel_quantizer,
+            use_bias=False,
+            name=f'dense_{i}',
+        )(x)
+        if batch_norm:
+            x = BatchNormalization(name=f'bn_dense_{i}')(x)
+        x = QActivation(f'quantized_relu({bits})', name=f'dense_act_{i}')(x)
+
+    x = QDense(
+        n_classes,
+        kernel_quantizer=kernel_quantizer,
+        use_bias=use_bias,
+        bias_quantizer=bias_quantizer,
+        name='output_dense',
     )(x)
- 
-    return keras.Model(inputs=inputs, outputs=outputs, name=f"t2_quantizedCNN_{bit_quantization}b")
- 
+    x_out = Activation('softmax', name='output_softmax')(x)
+
+    return Model(inputs=[x_in], outputs=[x_out], name='qkeras_cnn')

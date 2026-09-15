@@ -8,7 +8,7 @@ onnxoptimizer
 onnxruntime
 
 # Base científica
-numpy<2.0
+numpy
 pandas
 scipy
 scikit-learn
@@ -28,7 +28,7 @@ fastparquet
 mlcroissant
 
 # PyTorch + quantização
-torch==2.2.2
-torchvision==0.17.2
-torchaudio==2.2.2
-brevitas==0.10.2
+torch==2.5.1
+torchvision==0.20.1
+torchaudio==2.5.1
+brevitas==0.11.0 
