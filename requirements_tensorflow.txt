@@ -5,6 +5,7 @@ hls4ml
 tensorflow==2.13.1
 keras==2.13.1
 qkeras==0.9.0
+typing-extensions==4.5.0
 
 # ONNX pipeline
 onnx
@@ -30,3 +31,4 @@ seaborn
 setuptools
 pyarrow
 fastparquet
+visualkeras

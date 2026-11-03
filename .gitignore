@@ -20,14 +20,21 @@ outputs/
 .python-version
 
 
-project/data/
-project/outputs/
-project/sat_6_*/hls4ml_onnxs/
-project/sat_6_*/pytorch_models/
-project/sat_6_*/dataset/
-project/sat_6_*/notebooks/
-
 sat_6_*/dataset/
-sat_6_*/models/
-sat_6_*/old
+sat_6_*/models*/
 sat_6_*/*prj_*/
+sat_6_*/*prjs_*/
+sat_6_*/projects*/
+sat_6_*/relatorios*/
+
+tensorflow/sat_6/t1*/dataset/
+tensorflow/sat_6/t1*/models/
+tensorflow/sat_6/t1/*t1_projects/
+tensorflow/sat_6/t1/apresentacao
+tensorflow/sat_6/t1/da_*/
+tensorflow/sat_6/t1/comparacao_finn
+
+
+tensorflow/sat_6/t1_int/project*/
+
+*logs/
